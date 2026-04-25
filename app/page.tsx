@@ -9,7 +9,16 @@ export default function Home() {
         <h1 className="mb-6 text-5xl font-bold">
           Muhammad Shahzad
         </h1>
-
+        <div className="mt-8">
+          <a
+            href="https://github.com/HadiShahzad"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
+          >
+            Visit My GitHub
+          </a>
+        </div>
         <p className="max-w-2xl text-lg leading-8 text-slate-300">
           I am transitioning from energy engineering and pattern recognition
           research toward full-stack AI application development, RAG systems,
