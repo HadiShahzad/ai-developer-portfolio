@@ -13,7 +13,7 @@ export default function TaskManagerPage() {
   const [title, setTitle] = useState("");
 
   async function fetchTasks() {
-    const response = await fetch("http://127.0.0.1:8000/tasks");
+    const response = await fetch("https://task-manager-api-dm3j.onrender.com/tasks");
     const data = await response.json();
     setTasks(data);
   }
@@ -27,7 +27,7 @@ export default function TaskManagerPage() {
       return;
     }
 
-    await fetch("http://127.0.0.1:8000/tasks", {
+    await fetch("https://task-manager-api-dm3j.onrender.com/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function TaskManagerPage() {
   }
 
   async function markCompleted(task: Task) {
-    await fetch(`http://127.0.0.1:8000/tasks/${task.id}`, {
+    await fetch(`https://task-manager-api-dm3j.onrender.com/tasks/${task.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
