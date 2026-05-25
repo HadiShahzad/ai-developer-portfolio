@@ -1,73 +1,79 @@
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <section className="mx-auto max-w-4xl px-6 py-20">
+      <section className="mx-auto max-w-6xl px-6 py-20">
         <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-cyan-400">
-          AI-Driven Software Development Journey
+          AI-Driven Software Development Portfolio
         </p>
 
-        <h1 className="mb-6 text-5xl font-bold">
+        <h1 className="mb-6 text-5xl font-bold leading-tight">
           Muhammad Shahzad
         </h1>
-        <div className="mt-8">
+
+        <p className="max-w-3xl text-lg leading-8 text-slate-300">
+          I am building a career in AI-driven full-stack software development,
+          enterprise applications, and agentic AI systems. This portfolio
+          documents my hands-on learning journey through real deployed projects.
+        </p>
+
+        <div className="mt-10 flex flex-wrap gap-4">
+          <a
+            href="/solar-calculator"
+            className="rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
+          >
+            Solar Calculator
+          </a>
+
+          <a
+            href="/task-manager"
+            className="rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400"
+          >
+            Task Manager
+          </a>
+
           <a
             href="https://github.com/HadiShahzad"
             target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400"
+            className="rounded-xl border border-slate-700 px-5 py-3 font-semibold text-slate-200 transition hover:bg-slate-800"
           >
-            Visit My GitHub
+            GitHub Profile
           </a>
         </div>
-        <p className="max-w-2xl text-lg leading-8 text-slate-300">
-          I am transitioning from energy engineering and pattern recognition
-          research toward full-stack AI application development, RAG systems,
-          and agentic AI solutions for enterprise use cases.
-        </p>
-        <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="mb-3 text-2xl font-semibold">
-            Background
-          </h2>
 
-          <p className="leading-7 text-slate-300">
-            I have a background in electrical engineering, a PhD in pattern
-            recognition, and academic experience in energy engineering. I am now
-            building practical skills in AI-driven software development.
-          </p>
-        </div>
-        <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="mb-3 text-2xl font-semibold">
-            Current Learning Focus
-          </h2>
-
-          <ul className="space-y-2 text-slate-300">
-            <li>Frontend development using Next.js and React</li>
-            <li>Backend development using Python and FastAPI</li>
-            <li>Database development using PostgreSQL</li>
-            <li>RAG-based document question answering</li>
-            <li>Agentic AI applications for enterprise workflows</li>
-          </ul>
-        </div>
-                <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="mb-3 text-2xl font-semibold">
-            Projects
-          </h2>
-
-          <div className="rounded-xl border border-slate-700 bg-slate-950 p-5">
-            <h3 className="text-xl font-semibold">
-              Agriculture RAG Chatbot
-            </h3>
-
-            <p className="mt-3 leading-7 text-slate-300">
-              A retrieval-augmented generation chatbot deployed on Hugging Face
-              to answer agriculture-related questions.
-            </p>
-
-            <p className="mt-4 text-sm text-cyan-400">
-              Python • RAG • Hugging Face • LLM
+        <section className="mt-16 grid gap-6 md:grid-cols-3">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <h2 className="mb-3 text-2xl font-semibold">Portfolio Website</h2>
+            <p className="text-slate-300">
+              A Next.js portfolio deployed on Vercel to document my transition
+              into AI-driven software development.
             </p>
           </div>
-        </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <h2 className="mb-3 text-2xl font-semibold">Solar Calculator</h2>
+            <p className="text-slate-300">
+              A frontend project that calculates solar energy generation and
+              estimated monthly savings.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <h2 className="mb-3 text-2xl font-semibold">Task Manager App</h2>
+            <p className="text-slate-300">
+              A deployed full-stack app using Next.js, FastAPI, Render, Neon
+              PostgreSQL, GitHub, and Vercel.
+            </p>
+          </div>
+        </section>
+
+        <section className="mt-16 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+          <h2 className="mb-3 text-2xl font-semibold">Current Learning Stack</h2>
+
+          <p className="text-slate-300">
+            Next.js, React, TypeScript, Tailwind CSS, FastAPI, PostgreSQL,
+            Neon, Render, Vercel, GitHub, and soon AWS and Agentic AI tools.
+          </p>
+        </section>
       </section>
     </main>
   );
