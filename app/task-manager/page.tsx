@@ -19,26 +19,32 @@ export default function TaskManagerPage() {
   const [deadline, setDeadline] = useState("");
   const [filter, setFilter] = useState("All");
 
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editPriority, setEditPriority] = useState("Medium");
+  const [editDeadline, setEditDeadline] = useState("");
+
   async function fetchTasks() {
     const response = await fetch(`${API_URL}/tasks`);
     const data = await response.json();
-    setTasks(data);
+    setTasks(Array.isArray(data) ? data : []);
   }
 
   useEffect(() => {
     fetchTasks();
   }, []);
+
   const filteredTasks = tasks.filter((task) => {
-  if (filter === "Pending") {
-    return task.completed === false;
-  }
+    if (filter === "Pending") {
+      return task.completed === false;
+    }
 
-  if (filter === "Completed") {
-    return task.completed === true;
-  }
+    if (filter === "Completed") {
+      return task.completed === true;
+    }
 
-  return true;
-});
+    return true;
+  });
 
   async function createTask() {
     if (title.trim() === "") {
@@ -61,6 +67,45 @@ export default function TaskManagerPage() {
     setPriority("Medium");
     setDeadline("");
     fetchTasks();
+  }
+
+  function startEditing(task: Task) {
+    setEditingTaskId(task.id);
+    setEditTitle(task.title);
+    setEditPriority(task.priority);
+    setEditDeadline(task.deadline || "");
+  }
+
+  async function saveEditedTask(task: Task) {
+    if (editTitle.trim() === "") {
+      return;
+    }
+
+    await fetch(`${API_URL}/tasks/${task.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: editTitle,
+        completed: task.completed,
+        priority: editPriority,
+        deadline: editDeadline || null,
+      }),
+    });
+
+    setEditingTaskId(null);
+    setEditTitle("");
+    setEditPriority("Medium");
+    setEditDeadline("");
+    fetchTasks();
+  }
+
+  function cancelEditing() {
+    setEditingTaskId(null);
+    setEditTitle("");
+    setEditPriority("Medium");
+    setEditDeadline("");
   }
 
   async function markCompleted(task: Task) {
@@ -142,21 +187,22 @@ export default function TaskManagerPage() {
 
         <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
           <h2 className="mb-4 text-2xl font-semibold">Tasks</h2>
+
           <div className="mb-6 flex flex-wrap gap-3">
-  {["All", "Pending", "Completed"].map((item) => (
-    <button
-      key={item}
-      onClick={() => setFilter(item)}
-      className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
-        filter === item
-          ? "bg-cyan-500 text-slate-950"
-          : "border border-slate-700 text-slate-300 hover:bg-slate-800"
-      }`}
-    >
-      {item}
-    </button>
-  ))}
-</div>
+            {["All", "Pending", "Completed"].map((item) => (
+              <button
+                key={item}
+                onClick={() => setFilter(item)}
+                className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                  filter === item
+                    ? "bg-cyan-500 text-slate-950"
+                    : "border border-slate-700 text-slate-300 hover:bg-slate-800"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
 
           {filteredTasks.length === 0 ? (
             <p className="text-slate-400">No tasks found.</p>
@@ -167,37 +213,97 @@ export default function TaskManagerPage() {
                   key={task.id}
                   className="rounded-xl border border-slate-700 bg-slate-950 p-4"
                 >
-                  <p className="font-semibold">{task.title}</p>
+                  {editingTaskId === task.id ? (
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={editTitle}
+                        onChange={(event) => setEditTitle(event.target.value)}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                      />
 
-                  <p className="mt-1 text-sm text-slate-400">
-                    Status: {task.completed ? "Completed" : "Pending"}
-                  </p>
+                      <div className="flex flex-col gap-3 md:flex-row">
+                        <select
+                          value={editPriority}
+                          onChange={(event) =>
+                            setEditPriority(event.target.value)
+                          }
+                          className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                        >
+                          <option value="Low">Low</option>
+                          <option value="Medium">Medium</option>
+                          <option value="High">High</option>
+                        </select>
 
-                  <p className="mt-1 text-sm text-slate-400">
-                    Priority: {task.priority}
-                  </p>
+                        <input
+                          type="date"
+                          value={editDeadline}
+                          onChange={(event) =>
+                            setEditDeadline(event.target.value)
+                          }
+                          className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-cyan-400"
+                        />
+                      </div>
 
-                  <p className="mt-1 text-sm text-slate-400">
-                    Deadline: {task.deadline ? task.deadline : "No deadline"}
-                  </p>
+                      <div className="flex flex-wrap gap-3">
+                        <button
+                          onClick={() => saveEditedTask(task)}
+                          className="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                        >
+                          Save
+                        </button>
 
-                  <div className="mt-3 flex flex-wrap gap-3">
-                    {!task.completed && (
-                      <button
-                        onClick={() => markCompleted(task)}
-                        className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
-                      >
-                        Mark Completed
-                      </button>
-                    )}
+                        <button
+                          onClick={cancelEditing}
+                          className="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-slate-800"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="font-semibold">{task.title}</p>
 
-                    <button
-                      onClick={() => deleteTask(task.id)}
-                      className="rounded-lg border border-red-700 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-950"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                      <p className="mt-1 text-sm text-slate-400">
+                        Status: {task.completed ? "Completed" : "Pending"}
+                      </p>
+
+                      <p className="mt-1 text-sm text-slate-400">
+                        Priority: {task.priority}
+                      </p>
+
+                      <p className="mt-1 text-sm text-slate-400">
+                        Deadline:{" "}
+                        {task.deadline ? task.deadline : "No deadline"}
+                      </p>
+
+                      <div className="mt-3 flex flex-wrap gap-3">
+                        <button
+                          onClick={() => startEditing(task)}
+                          className="rounded-lg border border-cyan-700 px-4 py-2 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-950"
+                        >
+                          Edit
+                        </button>
+
+                        {!task.completed && (
+                          <button
+                            onClick={() => markCompleted(task)}
+                            className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+                          >
+                            Mark Completed
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => deleteTask(task.id)}
+                          className="rounded-lg border border-red-700 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-950"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>
