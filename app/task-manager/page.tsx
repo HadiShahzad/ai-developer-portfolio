@@ -17,6 +17,7 @@ export default function TaskManagerPage() {
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [deadline, setDeadline] = useState("");
+  const [filter, setFilter] = useState("All");
 
   async function fetchTasks() {
     const response = await fetch(`${API_URL}/tasks`);
@@ -27,6 +28,17 @@ export default function TaskManagerPage() {
   useEffect(() => {
     fetchTasks();
   }, []);
+  const filteredTasks = tasks.filter((task) => {
+  if (filter === "Pending") {
+    return task.completed === false;
+  }
+
+  if (filter === "Completed") {
+    return task.completed === true;
+  }
+
+  return true;
+});
 
   async function createTask() {
     if (title.trim() === "") {
@@ -130,12 +142,27 @@ export default function TaskManagerPage() {
 
         <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
           <h2 className="mb-4 text-2xl font-semibold">Tasks</h2>
+          <div className="mb-6 flex flex-wrap gap-3">
+  {["All", "Pending", "Completed"].map((item) => (
+    <button
+      key={item}
+      onClick={() => setFilter(item)}
+      className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+        filter === item
+          ? "bg-cyan-500 text-slate-950"
+          : "border border-slate-700 text-slate-300 hover:bg-slate-800"
+      }`}
+    >
+      {item}
+    </button>
+  ))}
+</div>
 
-          {tasks.length === 0 ? (
+          {filteredTasks.length === 0 ? (
             <p className="text-slate-400">No tasks found.</p>
           ) : (
             <ul className="space-y-3">
-              {tasks.map((task) => (
+              {filteredTasks.map((task) => (
                 <li
                   key={task.id}
                   className="rounded-xl border border-slate-700 bg-slate-950 p-4"
